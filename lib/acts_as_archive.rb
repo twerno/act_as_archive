@@ -39,8 +39,8 @@ module Acts
         temp = eval(self.class.name.to_s + ".find(" + self.id.to_s + ")") unless self.new_record? ## moze to zmienic, zeby nie odwolywac sie dodatkowo do bazy ? ;)
     
         ##DO ZMIANY PO ZAINSTALOWANIU BORTA 
-        self.user_id = 33               
-        #self.user_id = current_user.id
+        self.edited_by = 33
+        #self.edited_by = current_user.id
         self.user_stamp = @user_stamp
    
         wrk1 = self.changed? & !self.new_record?
@@ -77,13 +77,13 @@ module Acts
         archive.class_name      = temp.class.name
         archive.class_id        = temp.id.to_s
         archive.class_destroyed = temp.destroyed        
-        archive.user_id         = temp.user_id
+        archive.edited_by       = temp.edited_by
         archive.user_stamp      = temp.user_stamp
         archive.body            = ""
         archive.body_updated_at = temp.updated_at
     
         keys = temp.class.columns.collect{|c| c.name}
-        for key in ["id", "user_id", "user_stamp", "destroyed", "updated_at"]
+        for key in ["id", "edited_by", "user_stamp", "destroyed", "updated_at"]
           keys.delete key
         end
 
@@ -109,7 +109,7 @@ module Acts
         temp            = eval(anything.class_name << ".new")
         temp.id         = anything.class_id
         temp.destroyed  = anything.class_destroyed
-        temp.user_id    = anything.user_id
+        temp.edited_by  = anything.edited_by
         temp.user_stamp = anything.user_stamp
         temp.updated_at = anything.body_updated_at
       
@@ -118,7 +118,7 @@ module Acts
         types = temp.class.columns.collect{|c| c.sql_type}
       
         ## i usuwany z tej listy pola juz uzupelnione
-        for key in ["id", "user_id", "user_stamp", "destroyed", "updated_at"]
+        for key in ["id", "edited_by", "user_stamp", "destroyed", "updated_at"]
           index = keys.index key
           types.delete_at index unless index.nil?
           keys.delete_at  index unless index.nil?
