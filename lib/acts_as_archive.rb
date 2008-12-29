@@ -140,12 +140,13 @@ module Acts
             case types[keys.index( key)]
               when "character varying(255)" || "text"
                   str = body_fields_values[body_fields_names.index( key)]
-                  str = (str.nil? || str.empty?) ? "" : str.gsub(@@zamiennik, @@separator)
-                  eval("temp." << key << "= '" << str <<"'.to_s")
+                  str.gsub(@@zamiennik, @@separator) unless str.nil?
+                  eval("temp." << key << "= " << ((str.nil?) ? "nil" : "'" << str << "'.to_s"))
               when "integer"
                   int = body_fields_values[body_fields_names.index( key)]
-                  int = (int.nil? || int.empty?) ? "nil" : int
-                  eval("temp." << key << "= '" << int <<"'.to_i")
+                  #puts int.nil? || int.empty?
+                  int = (int.nil? || int.empty?) ? nil : int
+                  eval("temp." << key << "= '" << ((int.nil?) ? "'" : int <<"'.to_i"))
               when "boolean"
                   bool = "nil"
                   wnk = body_fields_values[body_fields_names.index( key)]       
